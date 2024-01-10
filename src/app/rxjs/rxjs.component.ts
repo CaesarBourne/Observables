@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-rxjs',
@@ -8,10 +8,13 @@ import { Observable } from 'rxjs';
 })
 export class RxjsComponent {
   agents: Observable<string>;
+  studentList = ['Emma', 'oLA'];
+  students: Observable<string[]> = of(this.studentList);
 
   constructor() {}
 
   ngOnInit(): void {
+    //NORMAL OBSERVABLES
     this.agents = new Observable((observer) => {
       try {
         observer.next('Emma');
@@ -24,5 +27,12 @@ export class RxjsComponent {
     this.agents.subscribe((data) => {
       console.log(data);
     });
+
+    //5 OF OBSERVABLE
+
+    this.students.subscribe((data) => {
+      console.log(data);
+    });
+    //ENDOF OF
   }
 }
