@@ -1,5 +1,15 @@
-import { Component } from '@angular/core';
-import { Observable, from, of } from 'rxjs';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import {
+  Observable,
+  debounce,
+  debounceTime,
+  from,
+  fromEvent,
+  of,
+  take,
+  takeWhile,
+} from 'rxjs';
 
 @Component({
   selector: 'app-rxjs',
@@ -8,6 +18,9 @@ import { Observable, from, of } from 'rxjs';
 })
 export class RxjsComponent {
   agents: Observable<string>;
+
+  @ViewChild('validate')
+  validate: ElementRef;
 
   studentList = ['Emma', 'oLA'];
   students$: Observable<string[]> = of(this.studentList);
@@ -27,6 +40,31 @@ export class RxjsComponent {
       }
     });
 
+    //   this.orders$.subscribe(data => {
+    //     const seqNum$ = interval(500);
+    //     seqNum$.subscribe(num =>{
+    //     if(num < 5) {
+    //     console. log(data + num)
+    //   }
+
+    // })
+
+    let searchForm: any;
+    takeWhile;
+    searchForm = new FormGroup({
+      name: new FormControl('ola'),
+    });
+
+    searchForm
+      .get('ola')
+      .valueChanges.pipe(
+        takeWhile((v) => this.checkCondition('v')),
+        debounceTime(3000)
+      )
+      .subscribe((data: any) => {
+        console.log(data);
+      });
+
     this.agents.subscribe((data) => {
       console.log(data);
     });
@@ -38,11 +76,37 @@ export class RxjsComponent {
     });
     //ENDOF OF
 
-    //6 OF OBSERVABLE
+    //6 from OBSERVABLE
 
     this.orders$.subscribe((data) => {
       console.log(data);
     });
     //ENDOF OF
+
+    //from event
   }
+
+  //from event
+
+  rxJsEventbbservable() {
+    const butObservable$ = fromEvent(this.validate?.nativeElement, 'click');
+    butObservable$.subscribe((data) => {
+      console.log(data);
+    });
+  }
+  checkCondition(data: string) {
+    return data.length > 5;
+  }
+
+  getEventobservable() {
+    const linkobservable$ = fromEvent(
+      this.validate?.nativeElement,
+      'mouseover'
+    );
+    linkobservable$.subscribe((data) => {
+      console.log(data);
+    });
+  }
+
+  // User should not be allowed to click 3 times
 }
